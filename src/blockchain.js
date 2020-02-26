@@ -87,13 +87,9 @@ class Blockchain {
      */
     requestMessageOwnershipVerification(address) {
         return new Promise((resolve) => {
-            const keyPair = bitcoin.ECPair.fromWIF(address);
-            const privateKey = keyPair.privateKey;
-            const message = 'Message Signature.';
-            const signature = bitcoinMessage.sign(message, privateKey, keyPair.compressed);
-            const verifiedMessage = bitcoinMessage.verify(message, address, signature).toString('base64');
-
-            resolve(verifiedMessage)
+            const messageToBeSigned = `${address}:${new Date().getTime().toString().slice(0,-3)}:starRegistry`;
+            resolve(messageToBeSigned);
+        });
     }
 
     /**
