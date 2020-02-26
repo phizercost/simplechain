@@ -11,6 +11,7 @@
 const {generateHash} = require('../util');
 const BlockClass = require('./block.js');
 const bitcoinMessage = require('bitcoinjs-message');
+const bitcoin = require('bitcoinjs-lib')
 
 class Blockchain {
 
@@ -86,8 +87,13 @@ class Blockchain {
      */
     requestMessageOwnershipVerification(address) {
         return new Promise((resolve) => {
-            
-        });
+            const keyPair = bitcoin.ECPair.fromWIF(address);
+            const privateKey = keyPair.privateKey;
+            const message = 'Message Signature.';
+            const signature = bitcoinMessage.sign(message, privateKey, keyPair.compressed);
+            const verifiedMessage = bitcoinMessage.verify(message, address, signature).toString('base64');
+
+            resolve(verifiedMessage)
     }
 
     /**
