@@ -9,7 +9,7 @@
  *  run asynchronous.
  */
 
-const {generateHash} = require('../util');
+const {generateHash, decodeData} = require('../util');
 const hex2ascii = require('hex2ascii');
 
 class Block {
@@ -39,14 +39,14 @@ class Block {
         let self = this;
         return new Promise((resolve, reject) => {
             // Save in auxiliary variable the current block hash
-            const currentHash = this.hash;
+            const currentHash = self.hash;
                                             
             // Recalculate the hash of the Block
-            const recalculatedHash = generateHash(this.body);
+            const recalculatedHash = generateHash(self);
             // Comparing if the hashes changed
             // Returning the Block is not valid
             if(currentHash !== recalculatedHash){
-                return (reject(new Error('The block body has been tempered with')))
+                return reject(new Error('The block body has been tempered with'));
             }
             
             // Returning the Block is valid
@@ -66,11 +66,19 @@ class Block {
      *     or Reject with an error.
      */
     getBData() {
+        let self = this;
         // Getting the encoded data saved in the Block
+        const encodedData = self.body;
         // Decoding the data to retrieve the JSON representation of the object
+        const decodedData = decodeData(encodedData);
         // Parse the data to an object to be retrieve.
-
+        const jsonObject = JSON.parse(decodedData);
         // Resolve with the data if the object isn't the Genesis block
+        if(self.previousBlockHash){
+            return resolve(jsonObject);
+        } else {
+            return reject(new Error('This is a genesis block'));
+        }
 
     }
 

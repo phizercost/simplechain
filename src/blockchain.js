@@ -8,7 +8,7 @@
  *  
  */
 
-const SHA256 = require('crypto-js/sha256');
+const {generateHash} = require('../util');
 const BlockClass = require('./block.js');
 const bitcoinMessage = require('bitcoinjs-message');
 
@@ -62,10 +62,18 @@ class Blockchain {
      * that this method is a private method. 
      */
     _addBlock(block) {
-        let self = this;
         return new Promise(async (resolve, reject) => {
+            let self = this;
+            block.height = self.chain.length;
+            self.time = new Date().getTime().toString().slice(0, -3);
+            self.chain.length > 0 ? block.previousBlockHash = self.chain[self.chain.length - 1].hash : console.log('Genesis Block') ;
+            self.hash = generateHash(JSON.stringify(block)).toString();
+            self.chain.push(block);
+            self.height += 1;
+
+
            
-        });
+        }).then(resolve).catch(reject);
     }
 
     /**
