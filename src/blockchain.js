@@ -35,7 +35,7 @@ class Blockchain {
    */
   async initializeChain() {
     if (this.height === -1) {
-      let block = new BlockClass.Block({ data: {address: "Genesis Block"} });
+      let block = new BlockClass.Block({ data: { address: "Genesis Block" } });
       await this._addBlock(block);
     }
   }
@@ -45,7 +45,8 @@ class Blockchain {
    */
   getChainHeight() {
     return new Promise((resolve, reject) => {
-      resolve(this.height);
+      let self = this;
+      resolve(self.height);
     });
   }
 
@@ -74,6 +75,8 @@ class Blockchain {
         self.chain.length > 0
           ? (block.previousBlockHash = self.chain[self.chain.length - 1].hash)
           : console.log("Genesis Block");
+
+
         block.hash = generateHash(JSON.stringify(block)).toString();
         self.chain.push(block);
         self.height += 1;
@@ -136,7 +139,7 @@ class Blockchain {
         );
         //3. Check if the time elapsed is less than 5 minutes
         const elapsedTime = currentTime - messageTime;
-        if (elapsedTime > 100000) {
+        if (elapsedTime > 300) {
           reject(new Error("The elapsed time is greater than 5 minutes"));
         }
         //4. Verifying the message with wallet address and signature
@@ -203,10 +206,13 @@ class Blockchain {
       try {
         // stars = self.chain.filter(p => parseJSON(p.body).data.address === address);
         self.chain.filter(p => {
-            const decodedData = JSON.parse(decodeData(p.body));
-            if (decodedData.data.address === address){
-                stars.push({"owner": decodedData.data.address, "star": decodedData.data.star});
-            }
+          const decodedData = JSON.parse(decodeData(p.body));
+          if (decodedData.data.address === address) {
+            stars.push({
+              owner: decodedData.data.address,
+              star: decodedData.data.star
+            });
+          }
         });
         resolve(stars);
       } catch (error) {
