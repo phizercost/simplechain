@@ -8,12 +8,15 @@ const generateHash = data => {
 };
 
 const decodeData = data => {
-  const decodedData = hex2ascii(data);
-
-  return decodedData;
+  return hex2ascii(data);
 };
+
+const parseJSON = data => {
+  return JSON.parse(data);
+}
 
 module.exports = {
   generateHash,
-  decodeData
+  decodeData,
+  parseJSON
 };
