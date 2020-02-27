@@ -42,8 +42,9 @@ class Block {
             const currentHash = self.hash;
                                             
             // Recalculate the hash of the Block
-            self.hash = null;
-            const recalculatedHash = generateHash(self);
+            let block = self;
+            block.hash = null;
+            const recalculatedHash = generateHash(block);
             // Comparing if the hashes changed
             // Returning the Block is not valid
             if(currentHash !== recalculatedHash){
