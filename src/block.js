@@ -39,12 +39,12 @@ class Block {
         let self = this;
         return new Promise((resolve, reject) => {
             // Save in auxiliary variable the current block hash
-            const currentHash = self.hash;
-                                            
+            const currentHash = self.hash;                             
             // Recalculate the hash of the Block
             let block = self;
             block.hash = null;
             const recalculatedHash = generateHash(block);
+            block.hash = currentHash
             // Comparing if the hashes changed
             // Returning the Block is not valid
             if(currentHash !== recalculatedHash){
