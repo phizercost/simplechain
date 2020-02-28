@@ -47,13 +47,8 @@ class Block {
             block.hash = currentHash
             // Comparing if the hashes changed
             // Returning the Block is not valid
-            if(currentHash !== recalculatedHash){
-                return reject(new Error('The block body has been tempered with'));
-            }
-            
             // Returning the Block is valid
-
-            return resolve();
+            resolve(currentHash == recalculatedHash);
 
         });
     }

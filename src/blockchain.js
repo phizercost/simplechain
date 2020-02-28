@@ -76,7 +76,6 @@ class Blockchain {
           ? (block.previousBlockHash = self.chain[self.chain.length - 1].hash)
           : console.log("Genesis Block");
 
-
         block.hash = generateHash(JSON.stringify(block)).toString();
         self.chain.push(block);
         self.height += 1;
@@ -233,15 +232,11 @@ class Blockchain {
     return new Promise(async (resolve, reject) => {
       for (let i = 0; i < self.chain.length; i++) {
         let block = self.chain[i];
-        if (!(await block.validate())) {
-          errorLog.push(`Invalid block:${decodeData(block)}`);
+        if (!await block.validate()) {
+          resolve(false);
         }
       }
-      if (errorLog.length > 0) {
-        reject(new Error("Invalid chain"));
-      } else {
-        resolve();
-      }
+      resolve(true);
     });
   }
 }
